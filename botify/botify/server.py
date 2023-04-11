@@ -4,22 +4,16 @@ import time
 from dataclasses import asdict
 from datetime import datetime
 
+from botify.experiment import Experiments, Treatment
+from botify.recommenders.contextual import Contextual
+from botify.recommenders.hw import Hw
+from botify.track import Catalog
 from flask import Flask
 from flask_redis import Redis
 from flask_restful import Resource, Api, abort, reqparse
 from gevent.pywsgi import WSGIServer
 
-from botify.botify.recommenders.hw import Hw
 from botify.data import DataLogger, Datum
-from botify.experiment import Experiments, Treatment
-from botify.recommenders.random import Random
-from botify.recommenders.sticky_artist import StickyArtist
-from botify.recommenders.toppop import TopPop
-from botify.recommenders.indexed import Indexed
-from botify.recommenders.contextual import Contextual
-from botify.track import Catalog
-
-import numpy as np
 
 root = logging.getLogger()
 root.setLevel("INFO")
@@ -77,7 +71,7 @@ class NextTrack(Resource):
         # TODO Seminar 6 step 6: Wire RECOMMENDERS A/B experiment
         treatment = Experiments.HW.assign(user)
         if treatment == Treatment.T1:
-            recommender = Hw(tracks_redis.connection, artists_redis.connection, catalog)
+            recommender = Hw(tracks_redis.connection, artists_redis.connection, recommendations_redis.connection, catalog)
         else:
             recommender = Contextual(tracks_redis.connection, catalog)
 

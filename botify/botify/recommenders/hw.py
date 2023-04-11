@@ -1,7 +1,6 @@
-from .random import Random
-from .recommender import Recommender
 import random
 
+from .recommender import Recommender
 from .sticky_artist import StickyArtist
 
 
@@ -12,10 +11,10 @@ class Hw(Recommender):
     recommendations found for the track.
     """
 
-    def __init__(self, tracks_redis, artists_redis, catalog):
+    def __init__(self, tracks_redis, artists_redis, recommendations_ub_redis, catalog):
         self.tracks_redis = tracks_redis
-        self.artists_redis = artists_redis
-        self.fallback = StickyArtist(tracks_redis, artists_redis, catalog)
+        self.recommendations_ub_redis = recommendations_ub_redis
+        self.fallback = StickyArtist(tracks_redis, artists_redis, recommendations_ub_redis, catalog)
         self.catalog = catalog
 
     def recommend_next(self, user: int, prev_track: int, prev_track_time: float) -> int:

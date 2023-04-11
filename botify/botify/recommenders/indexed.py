@@ -5,7 +5,7 @@ from .recommender import Recommender
 
 
 class Indexed(Recommender):
-    def __init__(self, tracks_redis, recommendations_redis, catalog):
+    def __init__(self, tracks_redis, artists_redis, recommendations_redis, catalog):
         self.recommendations_redis = recommendations_redis
         self.fallback = Random(tracks_redis)
         self.catalog = catalog
