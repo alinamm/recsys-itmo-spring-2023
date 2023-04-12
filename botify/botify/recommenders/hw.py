@@ -1,7 +1,7 @@
 import random
 
+from .indexed import Indexed
 from .recommender import Recommender
-from .sticky_artist import StickyArtist
 
 
 class Hw(Recommender):
@@ -14,12 +14,15 @@ class Hw(Recommender):
     def __init__(self, tracks_redis, artists_redis, recommendations_ub_redis, catalog):
         self.tracks_redis = tracks_redis
         self.recommendations_ub_redis = recommendations_ub_redis
-        self.fallback = StickyArtist(tracks_redis, artists_redis, recommendations_ub_redis, catalog)
+        self.fallback = Indexed(tracks_redis, artists_redis, recommendations_ub_redis, catalog)
         self.catalog = catalog
 
     def recommend_next(self, user: int, prev_track: int, prev_track_time: float) -> int:
         previous_track = self.tracks_redis.get(prev_track)
         if previous_track is None:
+            return self.fallback.recommend_next(user, prev_track, prev_track_time)
+
+        if prev_track_time < 0.12:
             return self.fallback.recommend_next(user, prev_track, prev_track_time)
 
         previous_track = self.catalog.from_bytes(previous_track)

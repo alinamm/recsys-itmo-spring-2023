@@ -1,12 +1,12 @@
 import random
 
-from .indexed import Indexed
+from .random import Random
 from .recommender import Recommender
 
 
 class StickyArtist(Recommender):
     def __init__(self, tracks_redis, artists_redis, recommendations_ub_redis, catalog):
-        self.fallback = Indexed(tracks_redis, artists_redis,  recommendations_ub_redis, catalog)
+        self.fallback = Random(tracks_redis)
         self.tracks_redis = tracks_redis
         self.artists_redis = artists_redis
         self.catalog = catalog
