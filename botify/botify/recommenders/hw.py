@@ -7,7 +7,7 @@ from .recommender import Recommender
 class Hw(Recommender):
     """
     Recommend tracks closest to the previous one.
-    Fall back to the random recommender if no
+    Fall back to the Indexed recommender if no
     recommendations found for the track.
     """
 
